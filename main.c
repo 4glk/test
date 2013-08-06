@@ -94,11 +94,7 @@ ISR (ADC_vect){
 
 ISR( TIMER1_OVF_vect )
 {
-  TCNT1 = 57724; //выставл€ем начальное значение TCNT1 (65536 Ч 1080) =  дл€ 11ћ√ц 64456
-	//(92.593 мкс 65536*92.593*10^-6 = 6.068 секунды,  8-ми битный Ч  0.0237 секунды)
-	//тактова€ частота / предделитель (1024), 16bit=65536 тиков 8бит = 256 тиков 
-	// 4000000/1024=3906 ~ 1/3906=256 msec * 65536 = 16.7 sec
-//*	 переключатель по таймеру
+  TCNT1 = 57724; 
 
 if (count_st==1){
 if (count!=0){
@@ -224,11 +220,7 @@ void InitTimer(){
 	//DDRD = ( 1 << PD7 );  // настраиваем PC3 на выход
 	TCCR1B = (1<<CS12)|(0<<CS11)|(1<<CS10); // настраиваем делитель 100=256 101=1024
 	TIMSK |= (1<<TOIE1); // разрешаем прерывание по переполнению таймера 1
-	TCNT1 = 57724;        // выставл€ем начальное значение TCNT1 64456 57724
-	// в моем случае при 8ћ√ц 65536-7812=57724 8000000/1024=7812 тиков за одну секунду
-	//счетчик считает с 57724
-	//TCCR1B |= (1 << WGM12)|(0 << CS12)|(1 << CS12)|(0 << CS12); //8MHz/256/(1+31249)=1Hz
-	//OCR1A = 31249;
+	TCNT1 = 57724;  
 	sei();                // выставл€ем бит общего разрешени€ прерываний
 }
 
@@ -236,14 +228,9 @@ void InitADC(){
 	cli();
 	ADCSRA |=  (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // Set ADC prescalar 
 	ADMUX |= (1 << REFS0)|(0<<REFS1); // Set ADC reference to AVCC
-	// no left ajustment needed in 10 bit mode!
-	//ADMUX |= (1 << ADLAR); // Left adjust ADC result to allow easy 8 bit reading
-   	// No MUX values needed to be changed to use ADC0
-	//ADMUX = 6;// |= (0 << MUX3) | (1 << MUX2) | (1 << MUX1) | (0 << MUX0); //ADC6
-	//ADMUX  |= (0 << MUX3) | (1 << MUX2) | (1 << MUX1) | (1 << MUX0); //ADC7
    	ADCSRA |= (1 << ADFR);  // Set ADC to Free-Running Mode
    	ADCSRA |= (1 << ADEN);  // Enable ADC
    	ADCSRA |= (1 << ADSC);// Start A2D Conversions
 	ADCSRA |= (1 << ADIE);//Ѕит 3 Ц ADIE (ADC Interrupt Enable) Ц бит разрешени€ прерывани€ аналогоЦцифрового преобразовател€ : 1 Ц разрешено, 0 Ц запрещено.
 	sei();
-}
+}//void
