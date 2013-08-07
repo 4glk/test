@@ -3,15 +3,15 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-/*#define BIT(x) (1 << (x)) 
-#define SETBITS(x,y) ((x) |= (y)) 
-#define CLEARBITS(x,y) ((x) &= (~(y))) 
-#define SETBIT(x,y) SETBITS((x), (BIT((y)))) 
-#define CLEARBIT(x,y) CLEARBITS((x), (BIT((y)))) 
-#define BITSET(x,y) ((x) & (BIT(y))) 
-#define BITCLEAR(x,y) !BITSET((x), (y)) 
-#define BITSSET(x,y) (((x) & (y)) == (y)) 
-#define BITSCLEAR(x,y) (((x) & (y)) == 0) 
+/*#define BIT(x) (1 << (x))
+#define SETBITS(x,y) ((x) |= (y))
+#define CLEARBITS(x,y) ((x) &= (~(y)))
+#define SETBIT(x,y) SETBITS((x), (BIT((y))))
+#define CLEARBIT(x,y) CLEARBITS((x), (BIT((y))))
+#define BITSET(x,y) ((x) & (BIT(y)))
+#define BITCLEAR(x,y) !BITSET((x), (y))
+#define BITSSET(x,y) (((x) & (y)) == (y))
+#define BITSCLEAR(x,y) (((x) & (y)) == 0)
 #define BITVAL(x,y) (((x)>>(y)) & 1) */
 
 #define SB(x,y) (x|=(1<<y))		//setbit
@@ -20,7 +20,6 @@
 #define CH(x,y) (x&(1<<y))		//checkbit
 
 // тоже самое для порта C
-
 #define SBC(x) (PORTC|=(1<<x))		//setbit
 #define CBC(x)	(PORTC&= ~(1<<x))	//clearbit
 #define TBC(x) (PORTC^=(1<<x))		//togglebit
@@ -56,7 +55,7 @@ int count_st=0;
 /*
 int sec2int(int sec){
 	int time; // как бы это ... массив в строку, а лучше в число
-	
+
 	return time;
 }
 
@@ -65,14 +64,14 @@ ISR (TIMER2_OVF_vect)
 {
 PORTD = 0xFF; //гасим все разряды
 PORTB = (1 << segcounter); //выбираем следующий разряд
-switch (segcounter){ 
+switch (segcounter){
 	case 0:PORTD = ~(SEGMENT[display1  % 6000/600]);break; // здесь раскладываем число на разряды
 	case 1:PORTD = ~(SEGMENT[display1  % 600 /60 ]);CB(PORTD,7);break;
 	case 2:PORTD = ~(SEGMENT[display1 % 60 /10]);break;
 	case 3:PORTD = ~(SEGMENT[display1 % 10]);break;
 }
-	
-switch (segcounter){ 
+
+switch (segcounter){
 	case 4:PORTD = ~(SEGMENT[display2 % 6000 / 600]);break; // здесь раскладываем число на разряды
 	case 5:PORTD = ~(SEGMENT[display2 % 600 / 60]);CB(PORTD,7);break;
 	case 6:PORTD = ~(SEGMENT[display2 % 60 / 10]);break;
@@ -86,30 +85,30 @@ if ((segcounter++) > 6) segcounter = 0;
 ISR (ADC_vect){
 	//ADMUX  |= (0 << MUX3) | (1 << MUX2) | (1 << MUX1) | (0 << MUX0);adc6=ADCW;
 	//ADMUX  |= (0 << MUX3) | (1 << MUX2) | (1 << MUX1) | (1 << MUX0);adc7=ADCW;
-	if (ADMUX==7){ 
+	if (ADMUX==7){
 		ADMUX=6; // Перекючить вход ADC6
 		adc6=ADCW; // снять показания в adc6
 		ADCSRA|=0x40;// // Начать следующее преобразоание
 		//ADMUX=0;adc_but=ADCW;ADCSRA|=0x40;ADMUX=6;ADCSRA|=0x40;
-		} 
+		}
 
-	else { 
-		ADMUX=7; // Перекючить вход ADC7 
+	else {
+		ADMUX=7; // Перекючить вход ADC7
 		adc7=ADCW*6; // Отображать ADCW число на PORTD
 		ADCSRA|=0x40; // Начать следующее преобразоание
 		//ADMUX=0;adc_but=ADCW;ADCSRA|=0x40;ADMUX=7;ADCSRA|=0x40;
 	}
-	
-	
+
+
 }
 //*/
 
 // Счетчик времени , минуты и секунды
 ISR( TIMER1_OVF_vect )
 {
-  TCNT1 = 64456; //выставляем начальное значение TCNT1 (65536 — 1080) =  для 11МГц 
+  TCNT1 = 64456; //выставляем начальное значение TCNT1 (65536 — 1080) =  для 11МГц
 	//(92.593 мкс 65536*92.593*10^-6 = 6.068 секунды,  8-ми битный —  0.0237 секунды)
-	//тактовая частота / предделитель (1024), 16bit=65536 тиков 8бит = 256 тиков 
+	//тактовая частота / предделитель (1024), 16bit=65536 тиков 8бит = 256 тиков
 	// 4000000/1024=3906 ~ 1/3906=256 msec * 65536 = 16.7 sec
  /* if( PIND & ( 1 << PD7 ) ) {
     PORTD &= ~( 1 << PD7 );
@@ -169,7 +168,7 @@ if (count!=0){
 			ch_st=0;
 			//count2--;
 		}//else count1--;
-		
+
 	}
 
 if (ch_st==0) {count2--;}
@@ -177,7 +176,7 @@ if (ch_st==0) {count2--;}
 }
 //*/
 //case (count==0){
-}	
+}
 void delay (int x){
 	//int h;
 	for ( i=x; i>0; ){}
@@ -186,18 +185,18 @@ void delay (int x){
 int trigger(int btn,int port){
 			//*
 			if (btn&&(!(CH(PORTC,port)))) {
-			delay(250);			
+			delay(250);
 			if (btn&&(!(CH(PORTC,port)))) SBC(port);
 				return 0;
 				//goto m; //для выхода из функции , тк переменная бтн в функции не меняется
-			}				
+			}
 			// выключить
 			if ((CH(PORTC,port))&&btn) {
 			delay(250);
 			if ((CH(PORTC,port))&&btn) (CB(PORTC,port));
 				//goto m;
 			return 0;
-			}		
+			}
 		//m:return 0;
 			return 0;
 		//*/
@@ -208,7 +207,7 @@ int trigger(int btn,int port){
 }
 
 /***Главная функция***/
-int main (void) 
+int main (void)
 {
 	InitDisplay();
 	InitTimer();
@@ -219,58 +218,58 @@ int main (void)
 	//count2=100;
 	//count1=100;
 
-	
+
 
 while(1){
 	//count1=adc6;
 	//count2=adc7;
 	display1=count1; if (display1==0) {display1=adc6_a;delay(200);}
 	display2=count2; if (display2==0) {display2=adc7_a;delay(200);}
-	
+
 	//adc6_a=adc6;
 	//adc7_a=adc7;
 	if (adc6_a!=adc6) {display1=adc6;delay(500);adc6_a=adc6;}
 	if (adc7_a!=adc7) {display2=adc7;delay(500);adc7_a=adc7;}
-	
+
 	/////////***********Счетчик старт стоп , автомат ручное (одно и тоже короче)**********//////////////
-	
-	if (count_btn&&(count_st==0)){delay(250);if (count_btn&&(count_st==0));count_st=1;} 
+
+	if (count_btn&&(count_st==0)){delay(250);if (count_btn&&(count_st==0));count_st=1;}
 	if (count_btn&&(count_st==1)){delay(250);if (count_btn&&(count_st==1));count_st=0;CBC(3);count=0;} //остановка таймера
 	if (podacha_btn&&(count_st==0)) {trigger(podacha_btn,3);}
-	
-	
+
+
 	//*
 	if ((ch_st==1)&&(count_st==1)){PORTC|=(1<<PC3);}
 	//else {PORTC&= ~(1<<PC3);}
 	if ((ch_st==0)&&(count_st==1)){PORTC&= ~(1<<PC3);}
 	//*/
-	//////***********************Труба переключатель О_о ************///////////////	
-	
+	//////***********************Труба переключатель О_о ************///////////////
+
 	if (truba_btn){trigger(truba_btn,5);}
 	//if ((!(PINC&(1<<PC2)))&&(PINC&(1<<PC1))&&(PINC&(1<<PC0))&&(PORTC&= ~(1<<PC5))) {
 	/*if (truba_btn&&truba_off) {
-			delay(250);			
-			if (truba_btn&&truba_off) {SBC(5);}				
+			delay(250);
+			if (truba_btn&&truba_off) {SBC(5);}
 		}	// выключить
 	if (truba_btn&&truba_on) {
 			delay(250);
 			if (truba_btn&&truba_on) (truba_off);
 		}
 		*/
-	
 
-			
+
+
 	//////////*********горелка************/////////////
-	if (fire_btn){trigger(fire_btn,4);} //1 
-	
-	
+	if (fire_btn){trigger(fire_btn,4);} //1
+
+
 	//подача
-	
+
 	//_delay_ms(100); // задержка
-	
+
 
 	}
-	
+
 	return 0;
 }
 
@@ -281,7 +280,7 @@ void InitControl(){
 }
 
 void InitDisplay(){
-	
+
 	cli();
 		// Инициализация таймера и портов индикатора
 	DDRD |= (1 << PD0)|(1 << PD1)|(1 << PD2)|(1 << PD3)|(1 << PD4)|(1 << PD5)|(1 << PD6)|(1 << PD7);
@@ -289,7 +288,7 @@ void InitDisplay(){
 	PORTD = 0x00;
 	PORTB = 0x00;
 	TIMSK |= (1 << TOIE2); // разрешение прерывания по таймеру2
-	TCCR2 |= (1 << CS21); //предделитель на 8 
+	TCCR2 |= (1 << CS21); //предделитель на 8
 
 	sei(); //глобально разрешаем прерывания
 }
@@ -305,7 +304,7 @@ void InitTimer(){
 
 void InitADC(){
 	cli();
-	ADCSRA |=  (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // Set ADC prescalar 
+	ADCSRA |=  (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // Set ADC prescalar
 	ADMUX |= (1 << REFS0)|(0<<REFS1); // Set ADC reference to AVCC
 	// no left ajustment needed in 10 bit mode!
 	//ADMUX |= (1 << ADLAR); // Left adjust ADC result to allow easy 8 bit reading
